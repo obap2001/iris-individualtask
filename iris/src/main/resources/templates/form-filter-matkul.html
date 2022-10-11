@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+  <title>Filter Mata Kuliah</title>
+  <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+  <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+<body>
+<nav th:replace="fragments/fragment :: navbar"></nav>
+<div class="container">
+  <div class="card m-4 p-4">
+    <div class="card-body">
+      <div class="justify-content-center">
+        <h2>Filter Mata Kuliah</h2>
+        <br>
+        <form th:action="@{/filter/mata-kuliah}" method="POST">
+          Dosen: <br>
+          <select name="dosen" class="form-control">
+            <div th:each="dosen, iterationStatus : *{listDosen}">
+              <option th:value="${dosen.nip}" th:text="${dosen.namaBelakang}"></option>
+            </div>
+          </select>
+          <br><br>
+          Semester: <br>
+          <input class="form-control" type="text" name="semester"/>
+          <br><br>
+
+          <button class="btn btn-primary" type="submit" >Search</button>
+          <a class="btn btn-primary" th:href="@{/}">Kembali</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

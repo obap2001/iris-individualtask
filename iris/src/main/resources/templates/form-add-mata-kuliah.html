@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+  <title>Tambah Mata Kuliah</title>
+  <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+  <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+<body>
+<nav th:replace="fragments/fragment :: navbar"></nav>
+<div class="container">
+  <div class="card m-4 p-4">
+    <div class="card-body">
+      <div class="justify-content-center">
+        <h2>Tambah Mata Kuliah Baru</h2>
+        <br>
+        <form th:action="@{/mata-kuliah/create-matakuliah}" th:object="${mataKuliah}" method="POST">
+          Nama Mata Kuliah: <br>
+          <input class="form-control" type="text" name="namaMatkul"/>
+          <br><br>
+
+          <div class="form-row">
+          Hari: <br>
+          <input class="form-control" type="text" name="hari"/>
+          SKS: <br>
+          <input class="form-control" type="number" onerror="'Harus bernilai lebih besar dari 0'" name="sks"/>
+          <br><br></div>
+
+          <div class="form-row">
+          Waktu Mulai: <br>
+          <input class="form-control" th:type="time" name="waktuMulai"/>
+          Kapasitas: <br>
+          <input class="form-control mr-sm-2" type="number" name="kapasitasKelas"/>
+          <br><br></div>
+
+          Semester: <br>
+          <select name="semester" class="form-control">
+            <option value="ganjil">Ganjil</option>
+            <option value="genap">Genap</option>
+          </select>
+          <br><br>
+
+          <table class="table">
+            <thead>
+<!--            <tr>-->
+              <th>Pengajar</th>
+              <th>Kelas</th>
+<!--            </tr>-->
+            </thead>
+            <tbody>
+            <tr th:each="dosenmk, iterationStatus : *{listDosenMataKuliah}" class="form-inline">
+              <td>
+
+                <select name="nip"  class="form-control">
+                  <div th:each="dosenEx, iterationStatus2 : ${listDosen}">
+                    <option th:type="text" th:value="${dosenEx.nip}" th:text="${dosenEx.namaBelakang}"></option>
+                  </div>
+                </select>
+              </td>
+              <td>
+                <input class="form-control" type="text" name="ruangKelas" />
+              </td>
+              <td>
+                <button th:value="${iterationStatus.index}" class="btn btn-danger" type="submit" name="deleteRow">Delete</button>
+              </td>
+            </tr>
+            </tbody>
+            <th>
+              <button class="btn btn-primary" type="submit" name="addRow">Tambah Pengajar</button>
+            </th>
+          </table>
+          <a class="btn btn-primary" th:href="@{/mata-kuliah}">Kembali</a>
+          <button class="btn btn-primary" type="submit" name="save">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

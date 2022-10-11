@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+  <title>Filter Mata Kuliah</title>
+  <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+  <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+<body>
+<nav th:replace="fragments/fragment :: navbar"></nav>
+<div class="container">
+  <div class="card m-4 p-4">
+    <div class="card-body">
+      <div class="justify-content-center">
+        <h2>Filter Mata Kuliah</h2>
+        <br>
+        <form th:action="@{/filter/mata-kuliah}" method="POST">
+          Dosen: <br>
+          <select name="dosen" class="form-control" th:value="${nip}">
+            <div th:each="dosen, iterationStatus : *{listDosen}">
+              <option th:value="${dosen.nip}" th:text="${dosen.namaBelakang}"></option>
+            </div>
+          </select>
+          <br><br>
+          Semester: <br>
+          <input class="form-control" type="text" name="semester" th:value="${semester}"/>
+          <br><br>
+
+          <button class="btn btn-primary" type="submit" >Search</button>
+          <a class="btn btn-primary" th:href="@{/}">Kembali</a>
+        </form>
+        <div th:if="*{listMk.size() != 0}">
+          <table class="table">
+            <thead>
+            <tr class="table-primary">
+              <th>No</th>
+              <th>Code</th>
+              <th>Nama Mata Kuliah</th>
+              <th>Sem.</th>
+              <th>SKS</th>
+              <th>Hari</th>
+              <th>Waktu</th>
+              <th>Kapasitas</th>
+              <th>Total Mahasiswa</th>
+              <th>Pengajar</th>
+              <th>Action</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="matkul, iterationStatus : ${listMk}"
+                th:style="${iterationStatus.even} ? 'font-weight:bold;'">
+              <td th:text="${iterationStatus.count}"></td>
+              <td th:text="${matkul.code}"></td>
+              <td th:text="${matkul.namaMatkul}"></td>
+              <td th:if="${matkul.semester == 'ganjil'}">Ganjil</td>
+              <td th:if="${matkul.semester == 'genap'}">Genap</td>
+              <td th:text="${matkul.sks}"></td>
+              <td th:text="${matkul.hari}"></td>
+              <td th:text="${matkul.waktuMulai} + ' - ' + ${matkul.waktuSelesai}"></td>
+              <td th:text="${matkul.kapasitasKelas}"></td>
+              <td th:text="${matkul.totalMahasiswa}"></td>
+              <div th:if="*{matkul.getListDosenMataKuliah.size() != 0}">
+                <td th:each="dosenmk, iterationStatus : ${matkul.getListDosenMataKuliah}" >
+                  <span th:text="${dosenmk.getDosen().getNamaDepan()}+ ' ' + ${dosenmk.getDosen().getNamaBelakang()} + ' '"><br></span>
+                </td>
+              </div>
+              <div th:unless="*{matkul.getListDosenMataKuliah.size() != 0}">
+                <td th:text="'-'"></td>
+              </div>
+              <td>
+                <a class="btn btn-sm btn-primary" th:href="@{/mata-kuliah/} + ${matkul.id} ">Detail</a>
+                <a class="btn btn-sm btn-primary" th:href="@{/mata-kuliah/} + ${matkul.id} + @{/delete}">Delete</a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div th:unless="*{listMk.size() != 0}">
+          <br>
+          <h4 th:text="'Dosen tersebut belum memiliki Mata Kuliah terdaftar!'"></h4>
+        </div>
+        <br>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

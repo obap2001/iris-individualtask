@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+  <title>Daftar Mahasiswa</title>
+  <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+  <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+<body>
+<nav th:replace="fragments/fragment :: navbar"></nav>
+<div class="container">
+  <div class="card m-4 p-4">
+    <div class="card-body">
+      <div class="justify-content-center" >
+        <div class="card-body">
+          <h2>List Mahasiswa</h2>
+          <a class="btn btn-primary" href="/mahasiswa/create-mahasiswa">+Tambah Mahasiswa</a>
+        </div>
+        <div th:if="*{listMahasiswa.size() != 0}">
+          <table class="table">
+            <thead>
+            <tr class="table-primary">
+              <th>No</th>
+              <th>NPM</th>
+              <th>Nama Mahasiswa</th>
+              <th>Status</th>
+              <th>Action</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="mahasiswa, iterationStatus : ${listMahasiswa}"
+                th:style="${iterationStatus.even} ? 'font-weight:bold;'">
+              <td th:text="${iterationStatus.count}"></td>
+              <td th:text="${mahasiswa.npm}"></td>
+              <td th:text="${mahasiswa.namaDepan} + ' ' +${mahasiswa.namaBelakang}"></td>
+              <td th:if="${mahasiswa.statusMahasiswa == 1}" th:text="'Aktif'"></td>
+              <td th:unless="${mahasiswa.statusMahasiswa == 1}" th:text="'Non-Aktif'"></td>
+              <td>
+                <a class="btn btn-sm btn-primary" th:href="@{/mahasiswa/} + ${mahasiswa.npm} ">Detail</a>
+                <a class="btn btn-sm btn-primary" th:href="@{/mahasiswa/} + ${mahasiswa.npm} + @{/update}">Edit</a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div th:unless="*{listMahasiswa.size() != 0}">
+          <br>
+          <h4 th:text="'Belum ada Mahasiswa terdaftar, tambahkan Mahasiswa baru dengan klik tombol Tambah Mahasiswa!'"></h4>
+        </div>
+        <br>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

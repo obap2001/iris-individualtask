@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+  <title>Tambah Mahasiswa</title>
+  <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+  <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+<body>
+<nav th:replace="fragments/fragment :: navbar"></nav>
+<div class="container">
+  <div class="card m-4 p-4">
+    <div class="card-body">
+      <div class="justify-content-center">
+        <h2>Tambah Mahasiswa Baru</h2>
+        <br>
+        <form th:action="@{/mahasiswa/create-mahasiswa}" th:object="${mahasiswa}" method="POST">
+          <input type="hidden" th:field="*{uuid}" />
+          Nama Mahasiswa: <br>
+          <div class="form-row form-inline">
+          <input class="form-control" type="text" name="namaDepan" placeholder="Nama Depan"/>
+          <input class="form-control" type="text" name="namaBelakang" placeholder="Nama Belakang"/>
+          <br><br></div>
+
+          <div class="form-row form-inline">
+            NPM: <br>
+            <input class="form-control" type="text" name="npm"/>
+            Status: <br>
+            <select name="statusMahasiswa" class="form-control">
+              <option value="1">Aktif</option>
+              <option value="0">Non-Aktif</option>
+            </select>
+            <br><br></div>
+          Email: <br>
+          <input class="form-control" type="email" name="email"/>
+
+          <a class="btn btn-primary" th:href="@{/mahasiswa}">Kembali</a>
+          <button class="btn btn-primary" type="submit" name="save">Simpan</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

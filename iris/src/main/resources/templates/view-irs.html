@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <title>Detail IRS</title>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+<body>
+<nav th:replace="fragments/fragment :: navbar"></nav>
+<div class="container">
+    <a th:href="@{/mahasiswa/}+${mahasiswa.npm}">←Detail Mahasiswa</a>
+    <div class="card m-4 p-4">
+        <div class="card-body">
+            <div class="justify-content-center" >
+
+                <h2>Detail IRS</h2>
+                <br>
+                <table class="table table-borderless">
+                    <thead>
+                    <tr>
+                        <th th:style="'font-weight:bold; color:#30D5C8;'">ID</th>
+                        <th th:style="'font-weight:bold; color:#30D5C8;'">Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td th:text="${irs.id}" th:style="'font-weight:light;'"></td>
+                        <td th:text="${irs.status}"></td>
+                    </tr>
+                    <tr>
+                        <th th:style="'font-weight:bold; color:#30D5C8;'">Semester</th>
+                        <th th:style="'font-weight:bold; color:#30D5C8;'">Total SKS</th>
+                    </tr>
+                    <tr>
+                        <td th:text="${irs.semester}" th:style="'font-weight:light;'"></td>
+                        <td th:if="${irs.jumlahSks}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <br>
+                <div th:if="*{listMatkul.size() != 0}">
+                    <table class="table">
+                        <thead>
+                        <tr class="table-primary">
+                            <th>No</th>
+                            <th>Code</th>
+                            <th>Nama Mata Kuliah</th>
+                            <th>Sem.</th>
+                            <th>SKS</th>
+                            <th>Hari</th>
+                            <th>Waktu</th>
+                            <th>Kapasitas</th>
+                            <th>Total Mahasiswa</th>
+                            <th>Pengajar</th>
+                            <th>Ruang</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="matkul, iterationStatus : ${listMatkul}"
+                            th:style="${iterationStatus.even} ? 'font-weight:bold;'">
+                            <td th:text="${iterationStatus.count}"></td>
+                            <td th:text="${matkul.code}"></td>
+                            <td th:text="${matkul.namaMatkul}"></td>
+                            <td th:text="${matkul.semester}"></td>
+                            <td th:text="${matkul.sks}"></td>
+                            <td th:text="${matkul.hari}"></td>
+                            <td th:text="${matkul.waktuMulai} + '-' + ${matkul.waktuSelesai}"></td>
+                            <td th:text="${matkul.kapasitasKelas}"></td>
+                            <td th:text="${matkul.totalMahasiswa}"></td>
+                            <div th:if="${matkul.getListDosenMataKuliah().size() != 0}" >
+                                <td th:each="dosenmk, iterationStatus : ${matkul.getListDosenMataKuliah()}" class="form-inline">
+                                    <span th:text="${dosenmk.getDosen().getNamaDepan()}+ ' ' + ${dosenmk.getDosen().getNamaBelakang()} + ' '"></span>
+                                </td>
+
+                            </div>
+                            <div th:if="${matkul.getListDosenMataKuliah().size() != 0}" >
+                                <td th:each="dosenmk, iterationStatus : ${matkul.getListDosenMataKuliah()}">
+                                    <span th:text="${dosenmk.getRuangKelas()} + ' '"></span>
+                                </td>
+                            </div>
+                            <div th:unless="${matkul.getListDosenMataKuliah().size() != 0}">
+                                <td th:text="'-'"></td>
+                            </div>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div th:unless="*{listMatkul.size() != 0}">
+                    <br>
+                    <h4 th:text="'Tidak ada Mata Kuliah yang diambil'"></h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

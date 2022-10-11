@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+  <title>Detail Mata Kuliah</title>
+  <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+  <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+<body>
+<nav th:replace="fragments/fragment :: navbar"></nav>
+<div class="container">
+  <a th:href="@{/mata-kuliah}">←List Mata Kuliah</a>
+  <div class="card m-4 p-4">
+    <div class="card-body">
+      <div class="justify-content-center" >
+
+        <h2>Detail Mata Kuliah</h2>
+        <br>
+          <table class="table table-borderless">
+            <thead>
+            <tr>
+              <th th:style="'font-weight:bold; color:#30D5C8;'">Code</th>
+              <th th:style="'font-weight:bold; color:#30D5C8;'">SKS</th>
+              <th th:style="'font-weight:bold; color:#30D5C8;'">Kapasitas</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td th:text="${mataKuliah.code}" th:style="'font-weight:light;'"></td>
+              <td th:text="${mataKuliah.sks}"></td>
+              <td th:text="${mataKuliah.kapasitasKelas}"></td>
+            </tr>
+            <tr>
+              <th th:style="'font-weight:bold; color:#30D5C8;'">Nama Mata Kuliah</th>
+              <th th:style="'font-weight:bold; color:#30D5C8;'">Hari</th>
+              <th th:style="'font-weight:bold; color:#30D5C8;'">Total Mahasiswa</th>
+            </tr>
+            <tr>
+              <td th:text="${mataKuliah.namaMatkul}" th:style="'font-weight:light;'"></td>
+              <td th:text="${mataKuliah.hari}"></td>
+              <td th:text="${mataKuliah.totalMahasiswa}"></td>
+            </tr>
+            <tr>
+              <th th:style="'font-weight:bold; color:#30D5C8;'">Semester</th>
+              <th th:style="'font-weight:bold; color:#30D5C8;'">Waktu</th>
+            </tr>
+            <tr>
+              <td th:if="${mataKuliah.semester ==  'ganjil'}" th:style="'font-weight:light;'">Ganjil</td>
+              <td th:if="${mataKuliah.semester ==  'genap'}" th:style="'font-weight:light;'">Genap</td>
+              <td th:text="${mataKuliah.waktuMulai} + '-'+${mataKuliah.waktuSelesai}"></td>
+            </tr>
+            </tbody>
+          </table>
+        <br>
+        <div th:if="*{listDosenMataKuliah.size() != 0}">
+            <table class="table">
+              <thead>
+              <tr>
+                <th>No</th>
+                <th>Dosen Pengajar</th>
+                <th>Ruang Kelas</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="dosenMk, iterationStatus : ${listDosenMataKuliah}">
+                <td th:text="${iterationStatus.count}"></td>
+                <td th:text="${dosenMk.getDosen().getNamaDepan()}+' '+${dosenMk.getDosen.getNamaBelakang}"></td>
+                <td th:text="${dosenMk.getRuangKelas()}"></td>
+              </tr>
+              </tbody>
+            </table>
+        </div>
+        <br>
+        <div th:unless="*{listDosenMataKuliah.size() != 0}">
+          <h2 th:text="'Belum ada dosen terdaftar'"></h2><br>
+        </div>
+      </div>
+      <a class="btn btn-sm btn-primary" th:href="@{/mata-kuliah/} + ${mataKuliah.id} + @{/delete}">Hapus Mata Kuliah</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

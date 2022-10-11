@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View Course</title>
+    <head th:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    </head>
+    <head th:fragment="js">
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+                integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFIBw8HfCJo="
+                crossorigin="anonymous"
+        ></script>
+        <script src="https://getbootstrap.com/docs/4.1/assets/js/vendor/popper.min.js"></script>
+        <scrip th:src="@{/js/bootstrap.min.js}"></scrip>
+    </head>
+</head>
+<body>
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand font-weight-bold text-primary" href="#">I-RIS</a>
+    <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+    >
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+            <a th:classappend="${#httpServletRequest.getRequestURI() == '/' ? 'font-weight-bold':''}" class="nav-item nav-link active text-secondary" th:href="@{/}">
+                Beranda <span class="sr-only">(current)</span>
+            </a>
+            <a th:classappend="${#httpServletRequest.getRequestURI().startsWith('/mahasiswa') ? 'font-weight-bold':''}" class="nav-item nav-link active text-secondary" th:href="@{/mahasiswa}">
+                Mahasiswa <span class="sr-only">(current)</span>
+            </a>
+            <a th:classappend="${#httpServletRequest.getRequestURI().startsWith('/mata-kuliah') ? 'font-weight-bold':''}" class="nav-item nav-link active text-secondary" th:href="@{/mata-kuliah}">
+                Mata Kuliah <span class="sr-only">(current)</span>
+            </a>
+            <a th:classappend="${#httpServletRequest.getRequestURI().startsWith('/filter') ? 'font-weight-bold':''}" class="nav-item nav-link active text-secondary" th:href="@{/filter/mata-kuliah}">
+                Filter <span class="sr-only">(current)</span>
+            </a>
+
+        </ul>
+    </div>
+</nav>
+</body>
+</html>
