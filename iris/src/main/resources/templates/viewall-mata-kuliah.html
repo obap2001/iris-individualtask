@@ -12,12 +12,12 @@
             <div class="justify-content-center" >
                 <div class="card-body">
                     <h2>List Mata Kuliah</h2>
-                    <a class="btn btn-primary" href="/mata-kuliah/create-matakuliah">+Tambah Mata Kuliah</a>
+                    <a class="btn btn-success" href="/mata-kuliah/create-matakuliah">+Tambah Mata Kuliah</a>
                 </div>
                 <div th:if="*{listMataKuliah.size() != 0}">
                     <table class="table">
                         <thead>
-                        <tr class="table-primary">
+                        <tr class="table-success">
                             <th>No</th>
                             <th>Code</th>
                             <th>Nama Mata Kuliah</th>
@@ -56,8 +56,8 @@
 <!--                            <td th:text="${matkul.waktuMulai.getHours()}+':'+${matkul.waktuMulai.getMinutes()}-->
 <!--                                        ' - '+${matkul.waktuSelesai.getHours()}+':'${matkul.waktuSelesai.getMinutes()}"></td>-->
                             <td>
-                                <a class="btn btn-sm btn-primary" th:href="@{/mata-kuliah/} + ${matkul.id} ">Detail</a>
-                                <a class="btn btn-sm btn-primary" th:href="@{/mata-kuliah/} + ${matkul.id} + @{/delete}">Delete</a>
+                                <a class="btn btn-sm btn-success" th:href="@{/mata-kuliah/} + ${matkul.id} ">Detail</a>
+                                <a class="btn btn-sm btn-danger" th:href="@{/mata-kuliah/} + ${matkul.id} + @{/delete}">Delete</a>
                             </td>
                         </tr>
                         </tbody>
