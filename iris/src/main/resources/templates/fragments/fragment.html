@@ -16,8 +16,8 @@
     </head>
 </head>
 <body>
-<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand font-weight-bold text-primary" href="#">I-RIS</a>
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light bg-success">
+    <a class="navbar-brand font-weight-bold text-light" href="#">I-RIS</a>
     <button
             class="navbar-toggler"
             type="button"
@@ -29,18 +29,19 @@
     >
         <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse">
-        <ul class="navbar-nav mr-auto">
-            <a th:classappend="${#httpServletRequest.getRequestURI() == '/' ? 'font-weight-bold':''}" class="nav-item nav-link active text-secondary" th:href="@{/}">
+        <ul class="navbar-nav ml-auto">
+            <a th:classappend="${#httpServletRequest.getRequestURI() == '/' ? 'font-weight-bold':''}" class="nav-item nav-link active text-light" th:href="@{/}">
                 Beranda <span class="sr-only">(current)</span>
             </a>
-            <a th:classappend="${#httpServletRequest.getRequestURI().startsWith('/mahasiswa') ? 'font-weight-bold':''}" class="nav-item nav-link active text-secondary" th:href="@{/mahasiswa}">
+            <a th:classappend="${#httpServletRequest.getRequestURI().startsWith('/mahasiswa') ? 'font-weight-bold':''}" class="nav-item nav-link active text-light" th:href="@{/mahasiswa}">
                 Mahasiswa <span class="sr-only">(current)</span>
             </a>
-            <a th:classappend="${#httpServletRequest.getRequestURI().startsWith('/mata-kuliah') ? 'font-weight-bold':''}" class="nav-item nav-link active text-secondary" th:href="@{/mata-kuliah}">
+            <a th:classappend="${#httpServletRequest.getRequestURI().startsWith('/mata-kuliah') ? 'font-weight-bold':''}" class="nav-item nav-link active text-light" th:href="@{/mata-kuliah}">
                 Mata Kuliah <span class="sr-only">(current)</span>
             </a>
-            <a th:classappend="${#httpServletRequest.getRequestURI().startsWith('/filter') ? 'font-weight-bold':''}" class="nav-item nav-link active text-secondary" th:href="@{/filter/mata-kuliah}">
+            <a th:classappend="${#httpServletRequest.getRequestURI().startsWith('/filter') ? 'font-weight-bold':''}" class="nav-item nav-link active text-light" th:href="@{/filter/mata-kuliah}">
                 Filter <span class="sr-only">(current)</span>
             </a>
 
