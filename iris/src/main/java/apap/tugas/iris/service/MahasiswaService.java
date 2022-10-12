@@ -8,6 +8,7 @@ public interface MahasiswaService {
     void addMahasiswa(MahasiswaModel mahasiwa);
 
     List<MahasiswaModel> getListMahasiswa();
+    List<MahasiswaModel> getListMahasiswaByStatus(int status);
 
     MahasiswaModel getMahasiswaByNpm(String npm);
 

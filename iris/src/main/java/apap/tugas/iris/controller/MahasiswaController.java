@@ -176,55 +176,78 @@ public class MahasiswaController {
     public String updateIRSMahasiswaSubmitPage(@ModelAttribute IRSModel irs,
                                                @PathVariable Long id,
                                                @PathVariable String npm,
-                                               Model model){
+                                               Model model) {
         IRSModel oldIrs = irsService.getIRSById(id);
-        boolean isValidKapasitas = true;
-        boolean isValidSemester = true;
-        int totalSKS = 0;
+        List<MataKuliahModel> oldMk = oldIrs.getListMataKuliah();
+        if(oldMk==null)
+            oldMk = new ArrayList<>();
+        List<MataKuliahModel> updMk = irs.getListMataKuliah();
+        if(updMk==null)
+            updMk = new ArrayList<>();
+        List<MataKuliahModel> newMk = new ArrayList<>();
+        //check new mk based on
+        boolean isValidSemester = false;
         List<MataKuliahModel> listInvalidMK = new ArrayList<>();
-        for (MataKuliahModel mk : irs.getListMataKuliah()) {
-            totalSKS += mk.getSks();
-            if (mk.getTotalMahasiswa() >= mk.getKapasitasKelas())//check kapasitas masih cukup atau tidak
-                isValidKapasitas = false;
-            if (!mk.getSemester().equals(irs.getListMataKuliah().get(0).getSemester())) {
-                isValidSemester = false;
-                listInvalidMK.add(mk);
+        String checkSemester = oldIrs.getSemester().toLowerCase();
+        if (updMk.size()!=0||updMk!=null){
+            for (int i = 0; i<updMk.size(); i++) {
+                if (!oldMk.contains(updMk.get(i))&&updMk.get(i).getSemester().charAt(1)==checkSemester.charAt(1)) {
+                    newMk.add(updMk.get(i));
+                    isValidSemester = true;
+                    listInvalidMK.add(updMk.get(i));
+                }
+            }
+        }
+        //check deleted mk from oldmk
+        if (oldMk.size()!=0||oldMk!=null){
+            for (int i = 0; i < oldMk.size(); i++){
+                if (!updMk.contains(oldMk.get(i))) {
+                    oldMk.get(i).setTotalMahasiswa(oldMk.get(i).getTotalMahasiswa() - 1);
+                    oldMk.get(i).getListIrs().remove(irsService.getIRSById(id));
+                    oldMk.remove(oldMk.get(i));
+                }
+            }
+        }
+
+        boolean isValidKapasitas = true;
+
+        if (newMk.size()!=0||newMk!=null){
+            for (MataKuliahModel mk : newMk) {
+                if (mk.getTotalMahasiswa() >= mk.getKapasitasKelas())//check kapasitas masih cukup atau tidak
+                    isValidKapasitas = false;
             }
         }
         boolean isMkUnique = true;
         boolean isValidSks = true;
-        if (isValidSemester == true && totalSKS <= 24 && isValidKapasitas==true && irs.getListMataKuliah().size()!=0){
-            MataKuliahModel start = irs.getListMataKuliah().get(0);
-            for (int i = 1; i < irs.getListMataKuliah().size(); i++){
-                if (start.getCode().equals(irs.getListMataKuliah().get(i).getCode())) {
+        if (isValidSemester == true && isValidKapasitas==true && newMk.size()!=0){
+            MataKuliahModel start = newMk.get(0);
+            for (int i = 1; i < newMk.size(); i++){
+                if (start.getCode().equals(newMk.get(i).getCode())) {
                     isMkUnique = false;
                     break;
                 }
+            }
+        }
+        //adding newMk items to oldMk
+        if (newMk.size()!=0||newMk!=null){
+            for (MataKuliahModel mk : newMk){
+                oldMk.add(mk);
+            }
+        }
+        int totalSKS = 0;
+        if (oldMk.size()!=0||oldMk!=null){
+            for (MataKuliahModel mk : oldMk){
+                totalSKS += mk.getSks();
             }
         }
         if (isValidSemester == true && totalSKS <= 24 && isValidKapasitas==true
                 && isMkUnique == true
         ){
             oldIrs.setJumlahSks(totalSKS);
-            List<MataKuliahModel> listMataKuliah = irs.getListMataKuliah();
-            for (MataKuliahModel mk : listMataKuliah) {
-                if (!oldIrs.getListMataKuliah().contains(mk)){
-                    int total = mk.getTotalMahasiswa();
-                    total+=1;
-                    mk.setTotalMahasiswa(total);
-                    oldIrs.getListMataKuliah().add(mk);
-                }
-            }
-//            List<MataKuliahModel> lisMK = irs.getListMataKuliah();
-//            if(lisMK.size()!=0){
-//                MataKuliahModel start = lisMK.get(0);
-//                for (int i = 1; i <lisMK.size(); i++){
-//                    if (start.getCode() == lisMK.get(i).getCode()){
-//                        lisMK.remove(i);
-//                    }
-//                }
-//            }
-//            irs.setListMataKuliah(lisMK);
+            oldIrs.setListMataKuliah(oldMk);
+            System.out.println(oldMk.size());
+            oldIrs.setStatus(irs.getStatus());
+
             irsService.updateIRS(oldIrs);
 
         } else if (totalSKS > 24) {
@@ -282,6 +305,43 @@ public class MahasiswaController {
         model.addAttribute("email", mahasiswa.getEmail());
 
         return "add-mahasiswa";
+    }
+    @GetMapping("mahasiswa/delete")
+    public String deleteMahasiswaForm(Model model){
+        List<MahasiswaModel> listDelMahasiswa = mahasiswaService.getListMahasiswaByStatus(0);
+        for (MahasiswaModel mhs : listDelMahasiswa){
+            if (mhs.getStatusMahasiswa() !=0 )
+                listDelMahasiswa.remove(mhs);
+        }
+
+        model.addAttribute("listMhs", listDelMahasiswa);
+        return "form-delete-mahasiswa";
+    }
+    @PostMapping("mahasiswa/delete")
+    public String deleteMahasiswaSubmit(@RequestParam("listMahasiswa") List<String> listNpm, Model model){
+        System.out.println(listNpm.get(0));
+        for (String npm : listNpm){
+            MahasiswaModel mahasiswadel = mahasiswaService.getMahasiswaByNpm(npm);
+            try{
+                if (mahasiswadel.getListIRS()!=null || mahasiswadel.getListIRS().size()!=0){
+                    List<IRSModel> irsdels = mahasiswadel.getListIRS();
+                    for (IRSModel irsdel : irsdels){
+                        for (MataKuliahModel mk : irsdel.getListMataKuliah()){
+                            List<IRSModel> listIrsMk = mk.getListIrs();
+                            listIrsMk.remove(irsdel);
+                        }
+                        irsService.deleteIRS(irsdel);
+                    }
+                }
+            }catch (NullPointerException e){
+
+            }
+
+            mahasiswaService.deleteMahasiswa(mahasiswadel);
+        }
+
+        model.addAttribute("listNpm", listNpm);
+        return "delete-mahasiswa";
     }
 
 }

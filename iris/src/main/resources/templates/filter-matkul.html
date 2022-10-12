@@ -24,8 +24,8 @@
           <input class="form-control" type="text" name="semester" th:value="${semester}"/>
           <br><br>
 
-          <button class="btn btn-primary" type="submit" >Search</button>
-          <a class="btn btn-primary" th:href="@{/}">Kembali</a>
+          <button class="btn btn-success" type="submit" >Search</button>
+          <a class="btn btn-secondary" th:href="@{/}">Kembali</a>
         </form>
         <div th:if="*{listMk.size() != 0}">
           <table class="table">
@@ -67,8 +67,8 @@
                 <td th:text="'-'"></td>
               </div>
               <td>
-                <a class="btn btn-sm btn-primary" th:href="@{/mata-kuliah/} + ${matkul.id} ">Detail</a>
-                <a class="btn btn-sm btn-primary" th:href="@{/mata-kuliah/} + ${matkul.id} + @{/delete}">Delete</a>
+                <a class="btn btn-sm btn-info" th:href="@{/mata-kuliah/} + ${matkul.id} ">Detail</a>
+                <a class="btn btn-sm btn-danger" th:href="@{/mata-kuliah/} + ${matkul.id} + @{/delete}">Delete</a>
               </td>
             </tr>
             </tbody>

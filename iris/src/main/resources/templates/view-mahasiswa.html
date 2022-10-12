@@ -40,10 +40,10 @@
         <br>
         <div th:if="*{listIrs.size() != 0}">
           <h3>List IRS</h3>
-          <a class="btn btn-sm btn-primary" th:href="@{/mahasiswa/} + ${mahasiswa.npm} +'/create-irs'">+ Tambah IRS</a>
+          <a class="btn btn-sm btn-success" th:href="@{/mahasiswa/} + ${mahasiswa.npm} +'/create-irs'">+ Tambah IRS</a>
           <table class="table">
             <thead>
-            <tr>
+            <tr class="table-success">
               <th>ID</th>
               <th>Semester</th>
               <th>Total SKS</th>
@@ -58,8 +58,8 @@
               <td th:text="${irs.jumlahSks}"></td>
               <td th:text="${irs.status}"></td>
               <td>
-                <a class="btn btn-sm btn-primary" th:href="@{/mahasiswa/} + ${mahasiswa.npm} +'/'+${irs.id}">Detail</a>
-                <a class="btn btn-sm btn-primary" th:href="@{/mahasiswa/} + ${mahasiswa.npm} +'/'+${irs.id}+'/update'">Edit</a>
+                <a class="btn btn-sm btn-info" th:href="@{/mahasiswa/} + ${mahasiswa.npm} +'/'+${irs.id}">Detail</a>
+                <a class="btn btn-sm btn-warning" th:href="@{/mahasiswa/} + ${mahasiswa.npm} +'/'+${irs.id}+'/update'">Edit</a>
               </td>
             </tr>
             </tbody>

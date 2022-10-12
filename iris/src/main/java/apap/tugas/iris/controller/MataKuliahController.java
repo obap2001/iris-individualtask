@@ -49,15 +49,15 @@ public class MataKuliahController {
     public String deleteMataKuliah(@PathVariable Long id, Model model){
         MataKuliahModel mataKuliah = mataKuliahService.getMataKuliahById(id);
         boolean isNotInIrs = false;
-        List<IRSModel> listIrs = mataKuliah.getListIrs();
-        if(listIrs.size()==0){
+        if(mataKuliah.getListIrs().size()==0||mataKuliah.getListIrs()==null){
             isNotInIrs = true;
-            if(mataKuliah.getListDosenMataKuliah().size() == 1)
-                dosenMataKuliahService.deleteDosenMataKuliah(mataKuliah.getId());
-            else if (mataKuliah.getListDosenMataKuliah().size() > 1)
-                dosenMataKuliahService.deleteAll(mataKuliah.getId());
-            mataKuliahService.deleteMataKuliah(mataKuliah);
         }
+        if(mataKuliah.getListDosenMataKuliah().size() == 1)
+            dosenMataKuliahService.deleteDosenMataKuliah(mataKuliah.getId());
+        else if (mataKuliah.getListDosenMataKuliah().size() > 1)
+            dosenMataKuliahService.deleteAll(mataKuliah.getId());
+        if(isNotInIrs==true)
+            mataKuliahService.deleteMataKuliah(mataKuliah);
         model.addAttribute("code", mataKuliah.getCode());
         model.addAttribute("isNotInIrs", isNotInIrs);
 
