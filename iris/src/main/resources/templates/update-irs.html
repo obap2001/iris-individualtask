@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+  <title>Udate IRS</title>
+  <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+  <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+<body>
+<nav th:replace="fragments/fragment :: navbar"></nav>
+<div class="container">
+  <div class="card m-4 p-4">
+    <div class="card-body">
+      <div class="justify-content-center">
+          <div th:if="${isValidSks == true}">
+            <div th:if="${isMkUnique == true}">
+              <div th:if="${isValidKapasitas == true}">
+                <div th:if="${isValidSemester == true}">
+                  <h2 th:text="'IRS semester ' + ${semester} + ' telah berhasil diperbaharui.'"></h2>
+                  <br>
+                </div>
+                <div th:unless="${isValidSemester == true}">
+                  <div th:if="${listInvalidMk != null || listInvalidMk.size() != 0}">
+                    <div th:each="MATA_KULIAH, iterationStatus : ${listInvalidMk}">
+                      <h2 th:text="'Gagal mengupdate IRS, IRS semester '+${semester}+' tidak bisa menambahkan mata kuliah '+${MATA_KULIAH.namaMatkul}+' semester '+${MATA_KULIAH.semester}+'!'"></h2>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div th:unless="${isValidKapasitas}">
+                <h2 th:text="'Gagal mengupdate IRS, terdapat Mata Kuliah dengan kapasitasnya sudah penuh!'"></h2>
+              </div>
+            </div>
+            <div th:unless="${isMkUnique == true}">
+              <h2 th:text="'Tidak bisa menambahkan Mata Kuliah yang sama pada satu IRS!'"></h2>
+            </div>
+          </div>
+          <div th:unless="${isValidSks == true}">
+            <h2 th:text="'Gagal menambah IRS,  SKS lebih dari 24!'"></h2>
+          </div>
+        <a class="btn btn-primary" th:href="@{/mahasiswa/}+${npm}">Kembali</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>

@@ -27,7 +27,7 @@
             </select>
           </div>
           <br><br>
-          <div th:if="${listRecentMk.size() != 0}">
+          <div th:if="${listRecentMk.size() != 0 || listMk.size!=0}">
             <table class="table">
               <thead>
               <tr class="table-primary">
@@ -44,34 +44,63 @@
               </tr>
               </thead>
               <tbody>
-              <tr th:each="matkul, iterationStatus : ${listRecentMk}"
-                  th:style="${iterationStatus.even} ? 'font-weight:bold;'">
-                <td>
-                  <input class="form-check-input" type="checkbox"
-                         th:field="*{listMataKuliah}"
-                         th:value="${matkul.id}"
-                         checked
-                  />
-                </td>
-                <td th:text="${matkul.code}"></td>
-                <td th:text="${matkul.namaMatkul}"></td>
-                <td th:text="${matkul.semester}"></td>
-                <td th:text="${matkul.sks}"></td>
-                <td th:text="${matkul.hari}"></td>
-                <td th:text="${matkul.waktuMulai} + '-' + ${matkul.waktuSelesai}"></td>
-                <td th:text="${matkul.kapasitasKelas}"></td>
-                <td th:text="${matkul.totalMahasiswa}"></td>
-                <div th:if="${matkul.getListDosenMataKuliah() != null || matkul.getListDosenMataKuliah().size() != 0}" >
-                  <td th:each="dosenmk, iterationStatus : ${matkul.getListDosenMataKuliah}" class="form-inline">
-                    <span th:text="${dosenmk.getDosen().getNamaDepan()}+ ' ' + ${dosenmk.getDosen().getNamaBelakang()} + ' '"><br></span>
+                <tr th:each="matkul, iterationStatus : ${listRecentMk}"
+                    th:style="${iterationStatus.even} ? 'font-weight:bold;'">
+                  <td>
+                    <input class="form-check-input" type="checkbox"
+                           th:field="*{listMataKuliah}"
+                           th:value="${matkul.id}"
+                           checked
+                    />
                   </td>
-                </div>
-                <div th:unless="${matkul.getListDosenMataKuliah.size() != 0}">
-                  <td th:text="'-'"></td>
-                </div>
-              </tr>
+                  <td th:text="${matkul.code}"></td>
+                  <td th:text="${matkul.namaMatkul}"></td>
+                  <td th:text="${matkul.semester}"></td>
+                  <td th:text="${matkul.sks}"></td>
+                  <td th:text="${matkul.hari}"></td>
+                  <td th:text="${matkul.waktuMulai} + '-' + ${matkul.waktuSelesai}"></td>
+                  <td th:text="${matkul.kapasitasKelas}"></td>
+                  <td th:text="${matkul.totalMahasiswa}"></td>
+                  <div th:if="${matkul.getListDosenMataKuliah() != null || matkul.getListDosenMataKuliah().size() != 0}" >
+                    <td th:each="dosenmk, iterationStatus : ${matkul.getListDosenMataKuliah()}" class="form-inline">
+                      <span th:text="${dosenmk.getDosen().getNamaDepan()}+ ' ' + ${dosenmk.getDosen().getNamaBelakang()} + ' '"><br></span>
+                    </td>
+                  </div>
+                  <div th:unless="${matkul.getListDosenMataKuliah.size() != 0}">
+                    <td th:text="'-'"></td>
+                  </div>
+                </tr>
+                <tr th:each="matkulN, iterationStatus : ${listMk}"
+                    th:style="${iterationStatus.even} ? 'font-weight:bold;'">
+                  <td>
+                    <input class="form-check-input" type="checkbox"
+                           th:field="*{listMataKuliah}"
+                           th:value="${matkulN.id}"
+                           checked
+                    />
+                  </td>
+                  <td th:text="${matkulN.code}"></td>
+                  <td th:text="${matkulN.namaMatkul}"></td>
+                  <td th:text="${matkulN.semester}"></td>
+                  <td th:text="${matkulN.sks}"></td>
+                  <td th:text="${matkulN.hari}"></td>
+                  <td th:text="${matkulN.waktuMulai} + '-' + ${matkulN.waktuSelesai}"></td>
+                  <td th:text="${matkulN.kapasitasKelas}"></td>
+                  <td th:text="${matkulN.totalMahasiswa}"></td>
+                  <div th:if="${matkulN.getListDosenMataKuliah() != null || matkulN.getListDosenMataKuliah().size() != 0}" >
+                    <td th:each="dosenmk, iterationStatus : ${matkulN.getListDosenMataKuliah()}" class="form-inline">
+                      <span th:text="${dosenmk.getDosen().getNamaDepan()}+ ' ' + ${dosenmk.getDosen().getNamaBelakang()} + ' '"><br></span>
+                    </td>
+                  </div>
+                  <div th:unless="${matkulN.getListDosenMataKuliah.size() != 0}">
+                    <td th:text="'-'"></td>
+                  </div>
+                </tr>
               </tbody>
             </table>
+          </div>
+          <div th:unless="${listRecentMk.size() != 0 || listMk.size!=0}">
+            <h2>Belum ada Mata kuliah terdaftar.</h2>
           </div>
           <button class="btn btn-primary" type="submit" name="save">Simpan</button>
           <a class="btn btn-primary" th:href="@{/mahasiswa/}+${npm}">Kembali</a>
