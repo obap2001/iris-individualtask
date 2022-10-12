@@ -68,7 +68,7 @@
         <br>
         <div th:unless="*{listIrs.size() != 0}">
           <h4 th:text="'Belum ada IRS'"></h4><br>
-          <a class="btn btn-sm btn-primary" th:href="@{/mahasiswa/} + ${mahasiswa.npm} +'/create-irs'">+ Tambah IRS</a>
+          <a class="btn btn-sm btn-info" th:href="@{/mahasiswa/} + ${mahasiswa.npm} +'/create-irs'">+ Tambah IRS</a>
         </div>
   </div>
 </div>
