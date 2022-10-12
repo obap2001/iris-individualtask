@@ -32,7 +32,7 @@ public class DosenMataKuliahModel {
     DosenModel dosen;
 
     @ManyToOne
-    @MapsId("id")
+    @MapsId("idMataKuliah")
     @JoinColumn(name = "id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     MataKuliahModel mataKuliah;

@@ -134,6 +134,14 @@ public class MahasiswaController {
         IRSModel irs = irsService.getIRSById(id);
         model.addAttribute("irs", irs);
         List<MataKuliahModel> listMk = irs.getListMataKuliah();
+//        if (listMk.size()!=0 || listMk!=null){
+//            for (MataKuliahModel mk : listMk){
+//                for (int i = 0; i < listMk.size(); i++){
+//                    if (mk.getCode() == listMk.get(i).getCode())
+//                        listMk.remove(i);
+//                }
+//            }
+//        }
         Collections.sort(listMk, new Comparator<MataKuliahModel>(){
             public int compare(MataKuliahModel o1, MataKuliahModel o2){
                 if(o1.getNamaMatkul() == o2.getNamaMatkul())
@@ -152,8 +160,7 @@ public class MahasiswaController {
         MahasiswaModel mahasiswa = mahasiswaService.getMahasiswaByNpm(npm);
         IRSModel recentIrs = irsService.getIRSById(id);
         List<MataKuliahModel> listRecentMk = recentIrs.getListMataKuliah();
-        IRSModel irs = irsService.getIRSBySemester(recentIrs.getSemester());
-        List<MataKuliahModel> listAllMk = irs.getListMataKuliah();
+        List<MataKuliahModel> listAllMk = mataKuliahService.getListMataKuliah();
         List<MataKuliahModel> listMk = new ArrayList<>();
         for (MataKuliahModel mk : listAllMk){
             if (!listRecentMk.contains(mk))
@@ -165,21 +172,72 @@ public class MahasiswaController {
         model.addAttribute("mahasiswa", mahasiswa);
         return "form-update-irs";
     }
-    @PostMapping("mahasiswa/{npm}/{semester}/update")
+    @PostMapping("mahasiswa/{npm}/{id}/update")
     public String updateIRSMahasiswaSubmitPage(@ModelAttribute IRSModel irs,
-                                               @PathVariable String semester,
+                                               @PathVariable Long id,
                                                @PathVariable String npm,
                                                Model model){
-        MahasiswaModel mahasiswa = mahasiswaService.getMahasiswaByNpm(npm);
-        List<IRSModel> listIrsOld = mahasiswa.getListIRS();
-//        for (IRSModel irsOld : listIrsOld){
-//            if (irsOld.s)
-//        }
-//        irs.setId(irsOld.getId());
-//        irs.setSemester(irsOld.getSemester());
-//        irs.setMahasiswa(irsOld.getMahasiswa());
-        irsService.updateIRS(irs);
-        model.addAttribute("semester", irs.getSemester());
+        IRSModel oldIrs = irsService.getIRSById(id);
+        boolean isValidKapasitas = true;
+        boolean isValidSemester = true;
+        int totalSKS = 0;
+        List<MataKuliahModel> listInvalidMK = new ArrayList<>();
+        for (MataKuliahModel mk : irs.getListMataKuliah()) {
+            totalSKS += mk.getSks();
+            if (mk.getTotalMahasiswa() >= mk.getKapasitasKelas())//check kapasitas masih cukup atau tidak
+                isValidKapasitas = false;
+            if (!mk.getSemester().equals(irs.getListMataKuliah().get(0).getSemester())) {
+                isValidSemester = false;
+                listInvalidMK.add(mk);
+            }
+        }
+        boolean isMkUnique = true;
+        boolean isValidSks = true;
+        if (isValidSemester == true && totalSKS <= 24 && isValidKapasitas==true && irs.getListMataKuliah().size()!=0){
+            MataKuliahModel start = irs.getListMataKuliah().get(0);
+            for (int i = 1; i < irs.getListMataKuliah().size(); i++){
+                if (start.getCode().equals(irs.getListMataKuliah().get(i).getCode())) {
+                    isMkUnique = false;
+                    break;
+                }
+            }
+        }
+        if (isValidSemester == true && totalSKS <= 24 && isValidKapasitas==true
+                && isMkUnique == true
+        ){
+            oldIrs.setJumlahSks(totalSKS);
+            List<MataKuliahModel> listMataKuliah = irs.getListMataKuliah();
+            for (MataKuliahModel mk : listMataKuliah) {
+                if (!oldIrs.getListMataKuliah().contains(mk)){
+                    int total = mk.getTotalMahasiswa();
+                    total+=1;
+                    mk.setTotalMahasiswa(total);
+                    oldIrs.getListMataKuliah().add(mk);
+                }
+            }
+//            List<MataKuliahModel> lisMK = irs.getListMataKuliah();
+//            if(lisMK.size()!=0){
+//                MataKuliahModel start = lisMK.get(0);
+//                for (int i = 1; i <lisMK.size(); i++){
+//                    if (start.getCode() == lisMK.get(i).getCode()){
+//                        lisMK.remove(i);
+//                    }
+//                }
+//            }
+//            irs.setListMataKuliah(lisMK);
+            irsService.updateIRS(oldIrs);
+
+        } else if (totalSKS > 24) {
+            isValidSks = false;
+        }
+
+        model.addAttribute("isMkUnique", isMkUnique);
+        model.addAttribute("isValidKapasitas", isValidKapasitas);
+        model.addAttribute("isValidSks", isValidSks);
+        model.addAttribute("isValidSemester", isValidSemester);
+        model.addAttribute("listInvalidMk", listInvalidMK);
+        model.addAttribute("semester", oldIrs.getSemester());
+        model.addAttribute("npm", npm);
         return "update-irs";
     }
     @GetMapping("mahasiswa/{npm}/update")
