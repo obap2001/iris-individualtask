@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://thymeleaf.org">
 <head>
-  <title>Daftar Mahasiswa</title>
+  <title>Delete Mahasiswa</title>
   <object th:include="fragments/fragment :: css" th:remove="tag"></object>
   <object th:include="fragments/fragment :: js" th:remove="tag"></object>
 <body>
 <nav th:replace="fragments/fragment :: navbar"></nav>
 <div class="container">
+  <a th:href="@{/mahasiswa}">←List Mahasiswa</a>
   <div class="card m-4 p-4">
     <div class="card-body">
       <div class="justify-content-center" >
         <div class="card-body">
-          <h2>List Mahasiswa</h2>
-          <a class="btn btn-primary" href="/mahasiswa/create-mahasiswa">+Tambah Mahasiswa</a>
-          <a class="btn btn-danger" href="/mahasiswa/delete">Delete Mahasiswa</a>
+          <h2>Hapus Mahasiswa</h2>
+
         </div>
-        <div th:if="*{listMahasiswa.size() != 0}">
+        <form th:action="@{/mahasiswa/delete}" method="POST">
+        <div th:if="*{listMhs.size() != 0}">
           <table class="table">
             <thead>
             <tr class="table-primary">
@@ -23,12 +24,12 @@
               <th>NPM</th>
               <th>Nama Mahasiswa</th>
               <th>Status</th>
-              <th>Action</th>
+              <th>Pilih</th>
 
             </tr>
             </thead>
             <tbody>
-            <tr th:each="mahasiswa, iterationStatus : ${listMahasiswa}"
+            <tr th:each="mahasiswa, iterationStatus : ${listMhs}"
                 th:style="${iterationStatus.even} ? 'font-weight:bold;'">
               <td th:text="${iterationStatus.count}"></td>
               <td th:text="${mahasiswa.npm}"></td>
@@ -36,16 +37,18 @@
               <td th:if="${mahasiswa.statusMahasiswa == 1}" th:text="'Aktif'"></td>
               <td th:unless="${mahasiswa.statusMahasiswa == 1}" th:text="'Non-Aktif'"></td>
               <td>
-                <a class="btn btn-sm btn-primary" th:href="@{/mahasiswa/} + ${mahasiswa.npm} ">Detail</a>
-                <a class="btn btn-sm btn-primary" th:href="@{/mahasiswa/} + ${mahasiswa.npm} + @{/update}">Edit</a>
+                <input type="checkbox" name="listMahasiswa" class="form-check-input"
+                       id="flexCheckDefault" th:value="${mahasiswa.npm}">
               </td>
             </tr>
             </tbody>
           </table>
         </div>
-        <div th:unless="*{listMahasiswa.size() != 0}">
+          <input type="submit" value="Hapus Mahasiswa" class="btn btn-danger">
+        </form>
+        <div th:unless="*{listMhs.size() != 0}">
           <br>
-          <h4 th:text="'Belum ada Mahasiswa terdaftar, tambahkan Mahasiswa baru dengan klik tombol Tambah Mahasiswa!'"></h4>
+          <h4 th:text="'Tidak ada data mahasiswa yang dapat dihapus!'"></h4>
         </div>
         <br>
       </div>

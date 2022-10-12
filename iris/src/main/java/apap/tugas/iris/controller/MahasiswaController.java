@@ -212,6 +212,7 @@ public class MahasiswaController {
                     int total = mk.getTotalMahasiswa();
                     total+=1;
                     mk.setTotalMahasiswa(total);
+                    mk.getListIrs().add(oldIrs);
                     oldIrs.getListMataKuliah().add(mk);
                 }
             }
@@ -224,7 +225,16 @@ public class MahasiswaController {
 //                    }
 //                }
 //            }
-//            irs.setListMataKuliah(lisMK);
+            oldIrs.setStatus(irs.getStatus());
+            for(MataKuliahModel mk : irs.getListMataKuliah()){
+                for (MataKuliahModel mkOld : oldIrs.getListMataKuliah()){
+                    if (mk.equals(mkOld))
+                        continue;
+                    else if (!mk.equals(mkOld)) {
+                        
+                    }
+                }
+            }
             irsService.updateIRS(oldIrs);
 
         } else if (totalSKS > 24) {
@@ -282,6 +292,36 @@ public class MahasiswaController {
         model.addAttribute("email", mahasiswa.getEmail());
 
         return "add-mahasiswa";
+    }
+    @GetMapping("mahasiswa/delete")
+    public String deleteMahasiswaForm(Model model){
+        List<MahasiswaModel> listDelMahasiswa = mahasiswaService.getListMahasiswaByStatus(0);
+        for (MahasiswaModel mhs : listDelMahasiswa){
+            if (mhs.getStatusMahasiswa() !=0 )
+                listDelMahasiswa.remove(mhs);
+        }
+
+        model.addAttribute("listMhs", listDelMahasiswa);
+        return "form-delete-mahasiswa";
+    }
+    @PostMapping("mahasiswa/delete")
+    public String deleteMahasiswaSubmit(@RequestParam("listMahasiswa") List<String> listNpm, Model model){
+        System.out.println(listNpm.get(0));
+        for (String npm : listNpm){
+            MahasiswaModel mahasiswadel = mahasiswaService.getMahasiswaByNpm(npm);
+            List<IRSModel> irsdels = mahasiswadel.getListIRS();
+            for (IRSModel irsdel : irsdels){
+                for (MataKuliahModel mk : irsdel.getListMataKuliah()){
+                    List<IRSModel> listIrsMk = mk.getListIrs();
+                    listIrsMk.remove(irsdel);
+                }
+                irsService.deleteIRS(irsdel);
+            }
+            mahasiswaService.deleteMahasiswa(mahasiswadel);
+        }
+
+        model.addAttribute("listNpm", listNpm);
+        return "delete-mahasiswa";
     }
 
 }

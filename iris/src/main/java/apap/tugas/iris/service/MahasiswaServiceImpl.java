@@ -24,6 +24,10 @@ public class MahasiswaServiceImpl implements MahasiswaService{
     public List<MahasiswaModel> getListMahasiswa(){
         return mahasiswaDb.findAll();
     }
+    @Override
+    public List<MahasiswaModel> getListMahasiswaByStatus(int status){
+        return mahasiswaDb.findAllByStatusMahasiswa(status);
+    }
 
     @Override
     public MahasiswaModel getMahasiswaByNpm(String npm){
